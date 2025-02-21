@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MemberRepository {
 
     private Map<Long, Member> store = new ConcurrentHashMap<>();
-    private static long sequence = 1L;
+    //private static long sequence = 1L;
+    private AtomicLong sequence = new AtomicLong();
     private static final MemberRepository instance = new MemberRepository();
 
     public static MemberRepository getInstance() {
@@ -19,7 +21,7 @@ public class MemberRepository {
     }
 
     public Member save(Member member) {
-        member.setId(sequence++);
+        member.setId(sequence.getAndIncrement());
         store.put(member.getId(), member);
         return member;
     }
